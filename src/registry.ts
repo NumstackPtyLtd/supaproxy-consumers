@@ -13,7 +13,8 @@ const log = pino({ name: 'consumer-registry' })
  *   registry.schemas()        // config schemas for dashboard
  */
 class PluginRegistry {
-  private readonly plugins = new Map<string, ConsumerPlugin>()
+  /** @internal */
+  readonly plugins = new Map<string, ConsumerPlugin>()
 
   /** Register a consumer plugin. Called automatically by each plugin module. */
   register(plugin: ConsumerPlugin): void {
