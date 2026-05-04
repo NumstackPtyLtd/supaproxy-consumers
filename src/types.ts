@@ -16,6 +16,29 @@ export interface ConfigSchema {
   fields: ConfigField[]
 }
 
+/** Field definition for test playground forms — rendered dynamically per consumer. */
+export interface TestField {
+  key: string
+  label: string
+  type: 'text' | 'textarea' | 'phone' | 'select'
+  placeholder?: string
+  required?: boolean
+  defaultValue?: string
+  options?: Array<{ label: string; value: string }>
+}
+
+/**
+ * Test config — allows the test playground to simulate requests
+ * as if they came from this consumer type.
+ *
+ * `fields` define the form UI. `payloadTemplate` uses {{key}} placeholders
+ * that get interpolated with field values before sending to the server.
+ */
+export interface TestConfig {
+  fields: TestField[]
+  payloadTemplate: Record<string, unknown>
+}
+
 /** Incoming message from a consumer channel. */
 export interface IncomingMessage {
   query: string
@@ -69,6 +92,26 @@ export interface ValidationResult {
 }
 
 /**
+ * Declares what this consumer supports. The dashboard uses this
+ * to decide which UI slots to render for this consumer type.
+ */
+export interface ConsumerCapabilities {
+  /** Supports binding channels/numbers to workspaces (Slack, Teams — yes. API — no). */
+  channels: boolean
+  /** Supports threaded replies (Slack — yes. WhatsApp — no). */
+  threads: boolean
+  /** Needs org-level credentials before use (Slack — yes. API — no). */
+  orgCredentials: boolean
+  /** Supports outbound/cold messages (Slack — yes. API — no). */
+  outbound: boolean
+}
+
+/** Schema for channel binding form — rendered in the Add Consumer modal. */
+export interface ChannelBindSchema {
+  fields: ConfigField[]
+}
+
+/**
  * ConsumerPlugin — the contract every consumer type must implement.
  *
  * Adding a new consumer = one file implementing this interface.
@@ -84,8 +127,17 @@ export interface ConsumerPlugin {
   /** Short description shown in the dashboard. */
   readonly description: string
 
-  /** Config schema — dashboard renders forms from this. */
+  /** Config schema — dashboard renders credential forms from this. */
   readonly configSchema: ConfigSchema
+
+  /** What this consumer supports — drives dashboard slot rendering. */
+  readonly capabilities: ConsumerCapabilities
+
+  /** Channel binding schema — rendered in Add Consumer modal when capabilities.channels is true. */
+  readonly channelBindSchema?: ChannelBindSchema
+
+  /** Test config — dashboard test playground renders consumer-specific forms from this. */
+  readonly testConfig?: TestConfig
 
   /** Validate org-level credentials (API keys, tokens). */
   validateCredentials(config: Record<string, string>): Promise<ValidationResult>
@@ -96,9 +148,9 @@ export interface ConsumerPlugin {
   /** Stop the consumer (disconnect cleanly). */
   stop(): Promise<void>
 
-  /** Bind a channel to a workspace. */
-  bindChannel(config: ChannelBindConfig): Promise<{ ok: boolean; error?: string }>
+  /** Bind a channel to a workspace. Only required when capabilities.channels is true. */
+  bindChannel?(config: ChannelBindConfig): Promise<{ ok: boolean; error?: string }>
 
-  /** Send an outbound message (cold notifications, follow-ups). */
-  sendMessage(channel: string, message: string, threadId?: string): Promise<void>
+  /** Send an outbound message. Only required when capabilities.outbound is true. */
+  sendMessage?(channel: string, message: string, threadId?: string): Promise<void>
 }

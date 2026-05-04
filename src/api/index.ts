@@ -15,6 +15,13 @@ export const apiPlugin: ConsumerPlugin = {
   name: 'API',
   description: 'Generate an API key to send queries to this workspace programmatically.',
 
+  capabilities: {
+    channels: false,
+    threads: false,
+    orgCredentials: false,
+    outbound: false,
+  },
+
   configSchema: {
     fields: [
       {
@@ -26,6 +33,16 @@ export const apiPlugin: ConsumerPlugin = {
         helpText: 'A label for this API key.',
       },
     ],
+  },
+
+  testConfig: {
+    fields: [
+      { key: 'query', label: 'Query', type: 'textarea', placeholder: 'Ask a question...', required: true },
+    ],
+    payloadTemplate: {
+      query: '{{query}}',
+      consumer_type: 'api',
+    },
   },
 
   async validateCredentials() {

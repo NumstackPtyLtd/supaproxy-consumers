@@ -1,9 +1,13 @@
 // Types
 export type {
   ConsumerPlugin,
+  ConsumerCapabilities,
   ConsumerContext,
   ConfigField,
   ConfigSchema,
+  ChannelBindSchema,
+  TestField,
+  TestConfig,
   IncomingMessage,
   AgentResponse,
   Workspace,
@@ -15,14 +19,6 @@ export type {
 // Registry
 export { registry } from './registry.js'
 
-// Plugins
+// Plugins — exported for host to register selectively
 export { slackPlugin } from './slack/index.js'
 export { apiPlugin } from './api/index.js'
-
-// Auto-register all built-in plugins
-import { registry } from './registry.js'
-import { slackPlugin } from './slack/index.js'
-import { apiPlugin } from './api/index.js'
-
-registry.register(slackPlugin)
-registry.register(apiPlugin)

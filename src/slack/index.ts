@@ -84,6 +84,13 @@ export const slackPlugin: ConsumerPlugin = {
   name: 'Slack',
   description: 'Bind a Slack channel to this workspace. When someone mentions the SupaProxy bot in this channel, queries will use this workspace\'s connections and knowledge.',
 
+  capabilities: {
+    channels: true,
+    threads: true,
+    orgCredentials: true,
+    outbound: true,
+  },
+
   configSchema: {
     fields: [
       {
@@ -103,6 +110,32 @@ export const slackPlugin: ConsumerPlugin = {
         helpText: 'Slack app-level token for Socket Mode',
       },
     ],
+  },
+
+  channelBindSchema: {
+    fields: [
+      { name: 'channelName', label: 'Channel name', type: 'text', required: true, placeholder: '#support-channel', helpText: 'The display name, e.g. #support-channel' },
+      { name: 'channelId', label: 'Channel ID', type: 'text', required: true, placeholder: 'C0EXAMPLE123', helpText: 'Right-click the channel in Slack, View channel details, copy the ID at the bottom.' },
+    ],
+  },
+
+  testConfig: {
+    fields: [
+      { key: 'channel', label: 'Channel', type: 'text', placeholder: '#general', required: true, defaultValue: 'C0TEST' },
+      { key: 'userId', label: 'User ID', type: 'text', placeholder: 'U0123456789', required: true, defaultValue: 'U0TEST' },
+      { key: 'userName', label: 'User name', type: 'text', placeholder: 'Elvis Magagula' },
+      { key: 'message', label: 'Message', type: 'textarea', placeholder: 'Check my account balance', required: true },
+    ],
+    payloadTemplate: {
+      query: '{{message}}',
+      consumer_type: 'slack',
+      consumer_context: {
+        channel: '{{channel}}',
+        userId: '{{userId}}',
+        userName: '{{userName}}',
+        threadId: '{{channel}}:test-thread',
+      },
+    },
   },
 
   async validateCredentials(config) {

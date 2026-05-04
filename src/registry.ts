@@ -58,12 +58,18 @@ class PluginRegistry {
     name: string
     description: string
     configSchema: ConsumerPlugin['configSchema']
+    capabilities: ConsumerPlugin['capabilities']
+    channelBindSchema?: ConsumerPlugin['channelBindSchema']
+    testConfig?: ConsumerPlugin['testConfig']
   }> {
     return this.list().map((p) => ({
       type: p.type,
       name: p.name,
       description: p.description,
       configSchema: p.configSchema,
+      capabilities: p.capabilities,
+      channelBindSchema: p.channelBindSchema,
+      testConfig: p.testConfig,
     }))
   }
 }
