@@ -1,6 +1,6 @@
 {
   "name": "@supaproxy/consumers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Plugin package for SupaProxy consumer types",
   "type": "module",
   "main": "dist/index.js",
