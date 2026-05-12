@@ -1,5 +1,6 @@
 import pino from 'pino'
 import type { ConsumerPlugin, ConsumerContext, ChannelBindConfig, IncomingMessage } from '../types.js'
+import { handleFlowCompletion } from './flows.js'
 
 const log = pino({ name: 'whatsapp-consumer' })
 
@@ -11,6 +12,14 @@ interface WhatsAppMessage {
   timestamp: string
   type: string
   text?: { body: string }
+  interactive?: {
+    type: string
+    nfm_reply?: {
+      response_json: string
+      body: string
+      name: string
+    }
+  }
 }
 
 interface WhatsAppWebhookEntry {
@@ -100,8 +109,6 @@ export async function handleWebhook(body: WhatsAppWebhookBody): Promise<void> {
       const phoneId = change.value.metadata.phone_number_id
 
       for (const msg of messages) {
-        if (msg.type !== 'text' || !msg.text?.body) continue
-
         const contact = contacts.find(c => c.wa_id === msg.from)
         const userName = contact?.profile?.name || msg.from
 
@@ -111,8 +118,47 @@ export async function handleWebhook(body: WhatsAppWebhookBody): Promise<void> {
           continue
         }
 
-        // Mark as read immediately
         markAsRead(msg.id)
+
+        // Handle flow form submissions
+        if (msg.type === 'interactive' && msg.interactive?.type === 'nfm_reply' && msg.interactive.nfm_reply) {
+          try {
+            const responseData = JSON.parse(msg.interactive.nfm_reply.response_json) as Record<string, unknown>
+            const flowToken = responseData.flow_token as string
+            const completion = handleFlowCompletion(flowToken, responseData)
+
+            if (completion) {
+              log.info({ tool: completion.session.toolName, fields: Object.keys(completion.data) }, 'Flow form submitted')
+
+              // Send the form data back as a message so the AI can process it
+              const formSummary = Object.entries(completion.data)
+                .filter(([k]) => k !== 'flow_token')
+                .map(([k, v]) => `${k}: ${v}`)
+                .join('\n')
+
+              const incoming: IncomingMessage = {
+                query: `[Form submitted for ${completion.session.toolName}]\n${formSummary}`,
+                channel: phoneId,
+                userId: msg.from,
+                userName,
+                threadId: `${phoneId}:${msg.from}`,
+                consumerType: 'whatsapp',
+              }
+
+              const result = await activeCtx.onMessage(incoming)
+              await sendReply(msg.from, result.answer)
+            } else {
+              await sendReply(msg.from, 'Form received, but the session expired. Please try again.')
+            }
+          } catch (err) {
+            log.error({ error: (err as Error).message }, 'Failed to process flow submission')
+            await sendReply(msg.from, 'Something went wrong processing your form. Please try again.')
+          }
+          continue
+        }
+
+        // Handle regular text messages
+        if (msg.type !== 'text' || !msg.text?.body) continue
 
         const incoming: IncomingMessage = {
           query: msg.text.body,
