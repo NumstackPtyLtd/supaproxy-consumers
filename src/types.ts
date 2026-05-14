@@ -9,6 +9,10 @@ export interface ConfigField {
   placeholder?: string
   helpText?: string
   options?: string[]
+  /** Regex pattern for client-side validation. The dashboard tests the value against this before submitting. */
+  pattern?: string
+  /** Error message shown when the pattern does not match. */
+  patternError?: string
 }
 
 /** Config schema drives dynamic form rendering in the dashboard. */
