@@ -119,6 +119,29 @@ export const slackPlugin: ConsumerPlugin = {
     ],
   },
 
+  sections: [
+    {
+      id: 'credentials',
+      label: 'Credentials',
+      description: 'Connect your Slack workspace. SupaProxy uses Socket Mode so no public URL is needed.',
+      source: 'settings',
+      fields: [
+        { name: 'bot_token', label: 'Bot token', type: 'password', required: true, placeholder: 'xoxb-...', helpText: 'Slack bot OAuth token (Bot User OAuth Token)' },
+        { name: 'app_token', label: 'App token', type: 'password', required: true, placeholder: 'xapp-...', helpText: 'Slack app-level token for Socket Mode' },
+      ],
+    },
+    {
+      id: 'slack-channels',
+      label: 'Slack channels',
+      description: 'Add the Slack channels where users mention the bot. SupaProxy automatically routes each message to the right workspace.',
+      source: 'entry_points',
+      fields: [
+        { name: 'channelName', label: 'Slack channel', type: 'text', required: true, placeholder: '#support', helpText: 'The name of your Slack channel, e.g. #support or #billing.', pattern: '^#[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$', patternError: 'Must start with # followed by letters, numbers, hyphens, or underscores.' },
+        { name: 'channelId', label: 'Slack channel ID', type: 'text', required: true, placeholder: 'C0EXAMPLE123', helpText: 'Right-click the channel in Slack, View channel details, copy the ID at the bottom.', pattern: '^[A-Z][A-Z0-9]{8,}$', patternError: 'Must be an uppercase alphanumeric ID (e.g. C0EXAMPLE123).' },
+      ],
+    },
+  ],
+
   testConfig: {
     fields: [
       { key: 'channel', label: 'Channel', type: 'text', placeholder: '#general', required: true, defaultValue: 'C0TEST' },

@@ -116,6 +116,26 @@ export interface ChannelBindSchema {
 }
 
 /**
+ * A section in the consumer setup flow.
+ *
+ * The dashboard renders each section as a tab/step in the SlideOver.
+ * Plugins declare what sections they need and what fields each contains.
+ * The dashboard renders fields generically; it does not know what they mean.
+ */
+export interface ConsumerSection {
+  /** Unique ID for this section. */
+  id: string
+  /** Tab label shown in the step indicators. */
+  label: string
+  /** Description shown at the top of the section. */
+  description: string
+  /** Where the field values are stored. 'settings' = org_settings key-value, 'entry_points' = entry_points table. */
+  source: 'settings' | 'entry_points'
+  /** Fields to render. The dashboard builds the form from this. */
+  fields: ConfigField[]
+}
+
+/**
  * ConsumerPlugin — the contract every consumer type must implement.
  *
  * Adding a new consumer = one file implementing this interface.
@@ -139,6 +159,13 @@ export interface ConsumerPlugin {
 
   /** Channel binding schema — rendered in Add Consumer modal when capabilities.channels is true. */
   readonly channelBindSchema?: ChannelBindSchema
+
+  /**
+   * Sections for the setup flow. The dashboard renders each section as a
+   * step in the SlideOver. If not provided, falls back to configSchema
+   * (one section) + channelBindSchema (second section if channels supported).
+   */
+  readonly sections?: ConsumerSection[]
 
   /** Test config — dashboard test playground renders consumer-specific forms from this. */
   readonly testConfig?: TestConfig

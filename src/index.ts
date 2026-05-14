@@ -6,6 +6,7 @@ export type {
   ConfigField,
   ConfigSchema,
   ChannelBindSchema,
+  ConsumerSection,
   TestField,
   TestConfig,
   IncomingMessage,

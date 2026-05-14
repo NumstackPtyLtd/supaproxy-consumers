@@ -260,6 +260,30 @@ export const whatsappPlugin: ConsumerPlugin = {
     ],
   },
 
+  sections: [
+    {
+      id: 'credentials',
+      label: 'Credentials',
+      description: 'Connect your WhatsApp Business account. Customers message your number and get AI responses.',
+      source: 'settings' as const,
+      fields: [
+        { name: 'access_token', label: 'Access token', type: 'password' as const, required: true, placeholder: 'EAAx...', helpText: 'Permanent access token from Meta Business settings.' },
+        { name: 'phone_number_id', label: 'Phone number ID', type: 'text' as const, required: true, placeholder: '123456789012345', helpText: 'The phone number ID from WhatsApp Business API setup.' },
+        { name: 'verify_token', label: 'Verify token', type: 'text' as const, required: true, placeholder: 'my-verify-token', helpText: 'A secret you choose. Enter the same value in Meta webhook configuration.' },
+      ],
+    },
+    {
+      id: 'phone-numbers',
+      label: 'Phone numbers',
+      description: 'Add the WhatsApp numbers where customers send messages. SupaProxy automatically routes each message to the right workspace.',
+      source: 'entry_points' as const,
+      fields: [
+        { name: 'channelId', label: 'Phone number ID', type: 'text' as const, required: true, placeholder: '123456789012345', helpText: 'The WhatsApp phone number ID from Meta Business settings.', pattern: '^[0-9]{10,20}$', patternError: 'Must be a numeric ID between 10 and 20 digits.' },
+        { name: 'channelName', label: 'Display name', type: 'text' as const, required: true, placeholder: '+27 81 234 5678', helpText: 'The phone number shown in the dashboard.', pattern: '^[+0-9][0-9 ()-]{5,20}$', patternError: 'Enter a valid phone number format.' },
+      ],
+    },
+  ],
+
   testConfig: {
     fields: [
       { key: 'phone', label: 'Phone number', type: 'phone', placeholder: '+27812345678', required: true },
