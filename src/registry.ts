@@ -60,6 +60,7 @@ class PluginRegistry {
     configSchema: ConsumerPlugin['configSchema']
     capabilities: ConsumerPlugin['capabilities']
     channelBindSchema?: ConsumerPlugin['channelBindSchema']
+    sections?: ConsumerPlugin['sections']
     testConfig?: ConsumerPlugin['testConfig']
   }> {
     return this.list().map((p) => ({
@@ -69,6 +70,7 @@ class PluginRegistry {
       configSchema: p.configSchema,
       capabilities: p.capabilities,
       channelBindSchema: p.channelBindSchema,
+      sections: p.sections,
       testConfig: p.testConfig,
     }))
   }
