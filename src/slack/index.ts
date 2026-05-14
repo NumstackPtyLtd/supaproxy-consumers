@@ -114,7 +114,7 @@ export const slackPlugin: ConsumerPlugin = {
 
   channelBindSchema: {
     fields: [
-      { name: 'channelName', label: 'Slack channel', type: 'text', required: true, placeholder: '#support', helpText: 'The name of your Slack channel, e.g. #support or #billing.', pattern: '^#?[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$', patternError: 'Letters, numbers, hyphens, underscores, and dots only.' },
+      { name: 'channelName', label: 'Slack channel', type: 'text', required: true, placeholder: '#support', helpText: 'The name of your Slack channel, e.g. #support or #billing.', pattern: '^#[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$', patternError: 'Must start with # followed by letters, numbers, hyphens, or underscores.' },
       { name: 'channelId', label: 'Slack channel ID', type: 'text', required: true, placeholder: 'C0EXAMPLE123', helpText: 'Right-click the channel in Slack, View channel details, copy the ID at the bottom.', pattern: '^[A-Z][A-Z0-9]{8,}$', patternError: 'Must be an uppercase alphanumeric ID (e.g. C0EXAMPLE123).' },
     ],
   },
