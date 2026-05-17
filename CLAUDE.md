@@ -27,7 +27,7 @@ The dashboard auto-discovers consumers via the server API.
 ## Code rules
 
 - Each plugin is a single exported object, not a class
-- Config schemas drive dashboard form rendering — no hardcoded UI
+- Config schemas drive dashboard form rendering. No hardcoded UI
 - Plugins must handle their own cleanup in `stop()`
 - Use pino for logging with a named child logger
 - All external service calls must handle errors gracefully

@@ -4,7 +4,7 @@ import type { ConsumerPlugin } from './types.js'
 const log = pino({ name: 'consumer-registry' })
 
 /**
- * Plugin registry — discovers and manages consumer plugins.
+ * Plugin registry: discovers and manages consumer plugins.
  *
  * Usage:
  *   import { registry } from '@supaproxy/consumers'
@@ -50,7 +50,7 @@ class PluginRegistry {
   }
 
   /**
-   * Return config schemas for all plugins — used by
+   * Return config schemas for all plugins, used by
    * GET /api/consumers/types to drive dashboard form rendering.
    */
   schemas(): Array<{
