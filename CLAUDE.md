@@ -1,5 +1,7 @@
 # @supaproxy/consumers
 
+Central governance hub: [supaproxy](https://github.com/NumstackPtyLtd/supaproxy)
+
 Plugin package for SupaProxy consumer types. Each consumer is a self-contained plugin implementing the `ConsumerPlugin` interface.
 
 ## Architecture
