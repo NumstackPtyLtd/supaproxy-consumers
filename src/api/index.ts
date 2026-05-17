@@ -1,7 +1,7 @@
 import type { ConsumerPlugin, ConsumerContext, ChannelBindConfig } from '../types.js'
 
 /**
- * API Consumer — REST API access to workspaces via Bearer token.
+ * API Consumer: REST API access to workspaces via Bearer token.
  *
  * Unlike Slack/WhatsApp, this consumer doesn't connect to an external service.
  * It exposes workspace queries via authenticated API endpoints.
@@ -51,7 +51,7 @@ export const apiPlugin: ConsumerPlugin = {
   },
 
   async start() {
-    // No external connection needed — API is served by the server itself
+    // No external connection needed. API is served by the server itself
   },
 
   async stop() {
@@ -59,7 +59,7 @@ export const apiPlugin: ConsumerPlugin = {
   },
 
   async bindChannel(_config: ChannelBindConfig) {
-    // API doesn't have channels — each key is scoped to a workspace
+    // API doesn't have channels. Each key is scoped to a workspace
     return { ok: true }
   },
 

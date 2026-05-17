@@ -185,7 +185,7 @@ export const slackPlugin: ConsumerPlugin = {
   async start(ctx, config) {
     const { bot_token, app_token } = config
     if (!bot_token || !app_token) {
-      log.warn('No Slack tokens — consumer disabled')
+      log.warn('No Slack tokens: consumer disabled')
       return
     }
 

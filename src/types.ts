@@ -1,6 +1,6 @@
 import type { Logger } from 'pino'
 
-/** Field definition for config forms — dashboard renders UI from this. */
+/** Field definition for config forms: dashboard renders UI from this. */
 export interface ConfigField {
   name: string
   label: string
@@ -20,7 +20,7 @@ export interface ConfigSchema {
   fields: ConfigField[]
 }
 
-/** Field definition for test playground forms — rendered dynamically per consumer. */
+/** Field definition for test playground forms: rendered dynamically per consumer. */
 export interface TestField {
   key: string
   label: string
@@ -32,11 +32,11 @@ export interface TestField {
 }
 
 /**
- * Test config — allows the test playground to simulate requests
+ * Test config: allows the test playground to simulate requests
  * as if they came from this consumer type.
  *
- * `fields` define the form UI. `payloadTemplate` uses {{key}} placeholders
- * that get interpolated with field values before sending to the server.
+ * `fields` define the form UI. `payloadTemplate` uses {{key}} placeholders,
+ * interpolated with field values before sending to the server.
  */
 export interface TestConfig {
   fields: TestField[]
@@ -100,17 +100,17 @@ export interface ValidationResult {
  * to decide which UI slots to render for this consumer type.
  */
 export interface ConsumerCapabilities {
-  /** Supports binding channels/numbers to workspaces (Slack, Teams — yes. API — no). */
+  /** Supports binding channels/numbers to workspaces (Slack, Teams: yes. API: no). */
   channels: boolean
-  /** Supports threaded replies (Slack — yes. WhatsApp — no). */
+  /** Supports threaded replies (Slack: yes. WhatsApp: no). */
   threads: boolean
-  /** Needs org-level credentials before use (Slack — yes. API — no). */
+  /** Needs org-level credentials before use (Slack: yes. API: no). */
   orgCredentials: boolean
-  /** Supports outbound/cold messages (Slack — yes. API — no). */
+  /** Supports outbound/cold messages (Slack: yes. API: no). */
   outbound: boolean
 }
 
-/** Schema for channel binding form — rendered in the Add Consumer modal. */
+/** Schema for channel binding form: rendered in the Add Consumer modal. */
 export interface ChannelBindSchema {
   fields: ConfigField[]
 }
@@ -136,7 +136,7 @@ export interface ConsumerSection {
 }
 
 /**
- * ConsumerPlugin — the contract every consumer type must implement.
+ * ConsumerPlugin: the contract every consumer type must implement.
  *
  * Adding a new consumer = one file implementing this interface.
  * The dashboard auto-discovers consumers via the registry.
@@ -151,13 +151,13 @@ export interface ConsumerPlugin {
   /** Short description shown in the dashboard. */
   readonly description: string
 
-  /** Config schema — dashboard renders credential forms from this. */
+  /** Config schema: dashboard renders credential forms from this. */
   readonly configSchema: ConfigSchema
 
-  /** What this consumer supports — drives dashboard slot rendering. */
+  /** What this consumer supports: drives dashboard slot rendering. */
   readonly capabilities: ConsumerCapabilities
 
-  /** Channel binding schema — rendered in Add Consumer modal when capabilities.channels is true. */
+  /** Channel binding schema: rendered in Add Consumer modal when capabilities.channels is true. */
   readonly channelBindSchema?: ChannelBindSchema
 
   /**
@@ -167,7 +167,7 @@ export interface ConsumerPlugin {
    */
   readonly sections?: ConsumerSection[]
 
-  /** Test config — dashboard test playground renders consumer-specific forms from this. */
+  /** Test config: dashboard test playground renders consumer-specific forms from this. */
   readonly testConfig?: TestConfig
 
   /** Validate org-level credentials (API keys, tokens). */
