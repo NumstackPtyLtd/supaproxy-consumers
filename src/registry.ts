@@ -1,5 +1,6 @@
 import pino from 'pino'
 import type { ConsumerPlugin } from './types.js'
+import { PluginNotFoundError } from './errors.js'
 
 const log = pino({ name: 'consumer-registry' })
 
@@ -29,7 +30,7 @@ class PluginRegistry {
   get(type: string): ConsumerPlugin {
     const plugin = this.plugins.get(type)
     if (!plugin) {
-      throw new Error(`Consumer plugin not found: ${type}`)
+      throw new PluginNotFoundError(type)
     }
     return plugin
   }
