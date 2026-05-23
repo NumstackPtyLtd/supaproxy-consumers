@@ -65,6 +65,6 @@ export const apiPlugin: ConsumerPlugin = {
 
   async sendMessage() {
     // API consumer doesn't send outbound messages
-    throw new Error('API consumer does not support outbound messages')
+    throw new Error('outbound_not_supported')
   },
 }

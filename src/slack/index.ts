@@ -249,7 +249,7 @@ export const slackPlugin: ConsumerPlugin = {
   },
 
   async sendMessage(channel, message, threadId) {
-    if (!activeApp) throw new Error('Slack consumer not running')
+    if (!activeApp) throw new Error('consumer_not_running')
     await activeApp.client.chat.postMessage({
       channel,
       text: message,

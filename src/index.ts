@@ -17,6 +17,9 @@ export type {
   ValidationResult,
 } from './types.js'
 
+// Errors
+export { PluginNotFoundError } from './errors.js'
+
 // Registry
 export { registry } from './registry.js'
 
